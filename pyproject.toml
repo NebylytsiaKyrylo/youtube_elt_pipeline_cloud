@@ -11,6 +11,44 @@ dev = [
     "sqlfluff>=4.2.2",
 ]
 
+# SQLFLUFF
+
+[tool.sqlfluff.core]
+dialect = "snowflake"
+max_line_length = 120
+templater = "jinja"
+
+[tool.sqlfluff.templater.jinja.context]
+ds = "2026-04-27"
+
+[tool.sqlfluff.indentation]
+indent_unit = "space"
+tab_space_size = 4
+
+# Capitalisation — 4 catégories, toutes en lower
+[tool.sqlfluff.rules.capitalisation.keywords]
+capitalisation_policy = "lower"   # select, from, where ...
+
+[tool.sqlfluff.rules.capitalisation.functions]
+capitalisation_policy = "lower"
+extended_capitalisation_policy = "lower"   # sum, round, min, max ...
+
+[tool.sqlfluff.rules.capitalisation.literals]
+capitalisation_policy = "lower"   # null, true, false ...
+
+[tool.sqlfluff.rules.capitalisation.types]
+capitalisation_policy = "lower"
+extended_capitalisation_policy = "lower"   # numeric, int, date ...
+
+[tool.sqlfluff.rules.aliasing.table]
+aliasing = "explicit"             # inner join core.dim_channel as dc
+
+[tool.sqlfluff.rules.layout.commas]
+comma_style = "trailing"          # channel_name,\n total_views
+
+[tool.sqlfluff.rules.structure.else_null]
+exemptions = []                   # ST01 : case when ... end  (without else null)
+
 # RUFF
 
 [tool.ruff]
