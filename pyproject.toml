@@ -89,13 +89,13 @@ ignore = [
 ]
 
 # Configuration isort
-# [tool.ruff.lint.isort]
-#known-first-party = ["youtube", "storage", "warehouse"]
+[tool.ruff.lint.isort]
+known-first-party = ["youtube"]
 # Déclare les modules src/ comme "first-party" pour qu'isort les groupe séparément :
 #   1. stdlib    (os, json, datetime...)
 #   2. third-party (pandas, sqlalchemy, requests...)
 #   3. first-party (youtube, storage, warehouse)  ← mes modules
-#force-sort-within-sections = true
+force-sort-within-sections = true
 
 # FORMATTING
 [tool.ruff.format]
