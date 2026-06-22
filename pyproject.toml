@@ -1,0 +1,67 @@
+[project]
+name = "youtube-elt-pipeline-cloud"
+version = "0.1.0"
+description = "Pipeline ELT YouTube cloud (Snowflake, dbt, S3) pour l'analyse de chaînes tech francophones"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.18",
+    "sqlfluff>=4.2.2",
+]
+
+# RUFF
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+indent-width = 4
+
+
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors — espaces, indentation, syntaxe de base (PEP 8)
+    "W", # pycodestyle warnings — alertes style moins critiques (lignes blanches, etc.)
+    "F", # Pyflakes — erreurs logiques : variables non utilisées, imports inutiles, noms non définis (évite des bugs silencieux)
+    "I", # isort — ordre et groupement des imports (stdlib / third-party / local)
+    "N", # pep8-naming — conventions de nommage : snake_case fonctions, PascalCase classes, UPPER_CASE constantes
+    "UP", # pyupgrade — modernise la syntaxe Python automatiquement : f-strings, type hints modernes (list vs List), super() sans arguments, etc.
+    "B", # flake8-bugbear — détecte des bugs courants et mauvaises pratiques : arguments mutables par défaut, boucles avec exceptions trop larges, comparaisons incorrectes
+    "C4", # flake8-comprehensions— encourage les comprehensions Pythoniques : list(x for x in ...) → [x for x in ...]
+    "SIM", # flake8-simplify — simplifie les structures inutilement complexes : if x == True → if x, combinaisons de conditions, etc.
+    "PTH", # flake8-use-pathlib — remplace os.path par pathlib (standard moderne) : os.path.join() → Path() / "file"
+    "RUF", # Ruff-specific rules — règles propres à ruff : détecte des patterns spécifiques à Python moderne, frappe dans les f-strings, etc.
+]
+
+ignore = [
+    "E501", # line-too-long — géré par le formatter (line-length = 100) évite les conflits lint/format
+    "B008", # function-call-in-default-argument — courant dans les DAGs Airflow (default_args={}) et dans les configs FastAPI/SQLAlchemy
+    "SIM108", # ternary-instead-of-if — le ternaire n'est pas toujours plus lisible
+    "RUF012", # mutable-class-attributes— pas pertinent pour ce projet
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101", # assert — autorisé dans les tests
+]
+"dags/**/*.py" = [
+    "B008", # function-call-in-default-argument — DAGs Airflow
+    "N999", # invalid-module-name — les noms de DAGs peuvent contenir des tirets
+]
+
+# Configuration isort
+# [tool.ruff.lint.isort]
+#known-first-party = ["youtube", "storage", "warehouse"]
+# Déclare les modules src/ comme "first-party" pour qu'isort les groupe séparément :
+#   1. stdlib    (os, json, datetime...)
+#   2. third-party (pandas, sqlalchemy, requests...)
+#   3. first-party (youtube, storage, warehouse)  ← mes modules
+#force-sort-within-sections = true
+
+# FORMATTING
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false  # Respecte les virgules finales intentionnelles :
+line-ending = "auto"               # Détecte Mac ou Windows automatiquement
